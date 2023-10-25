@@ -1,5 +1,5 @@
 from sklearn import metrics
-from sklearn.metrics import pairwise_distances
+from sklearn.metrics.cluster import normalized_mutual_info_score
 import numpy as np
 
 def whitening(X, method='zca'):
@@ -62,3 +62,6 @@ for i, (im_target, label_target) in enumerate(target_train_dl):
 
 src_member = np.concatenate(src_member, axis=0)
 tgt_member = np.concatenate(tgt_member, axis=0)
+
+normalized_mutual_info_score(label_target, preds)
+
