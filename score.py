@@ -37,7 +37,7 @@ def whitening(X, method='zca'):
   return np.dot(X_centered, W.T)
 
 ## either whitening or not
-embedding = whitening(embedding, method='cholesky')
+# embedding = whitening(embedding, method='cholesky')
 embedding = np.concatenate([src_embedding, tgt_embedding], axis=0)
 
 max_k = 100
@@ -58,10 +58,10 @@ for i, (im_target, label_target) in enumerate(target_train_dl):
   fc1_t, feature_target, fc2_t, predict_prob_target = totalNet.classifier.forward(fc1_t)
   # print('=============', i, feature_target.detach().cpu().numpy().shape)
   tgt_embedding.append(feature_target.detach().cpu().numpy())
-  tgt_member.append(label_target[0].detach().cpu().numpy())
+  tgt_member.append(label_target.detach().cpu().numpy())
 
 src_member = np.concatenate(src_member, axis=0)
 tgt_member = np.concatenate(tgt_member, axis=0)
 
-normalized_mutual_info_score(label_target, preds)
+normalized_mutual_info_score(label, preds)
 
