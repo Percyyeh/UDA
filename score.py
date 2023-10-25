@@ -1,3 +1,6 @@
+from sklearn import metrics
+from sklearn.metrics import pairwise_distances
+import numpy as np
 
 def whitening(X, method='zca'):
   """
