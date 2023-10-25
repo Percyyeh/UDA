@@ -119,6 +119,7 @@ if args.test.test_only:
     preds = dpgmm.predict(embedding)
 
     nmi = normalized_mutual_info_score(label, preds)
+    print(nmi)
 
     for x in target_accumulator:
         globals()[x] = target_accumulator[x]
