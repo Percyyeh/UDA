@@ -1,6 +1,9 @@
 from data import *
 from net import *
 from lib import *
+from sklearn import metrics
+from sklearn.metrics.cluster import normalized_mutual_info_score
+import numpy as np
 import datetime
 from tqdm import tqdm
 if is_in_notebook():
@@ -89,6 +92,33 @@ if args.test.test_only:
                 globals()[name] = variable_to_numpy(globals()[name])
 
             target_accumulator.updateData(globals())
+
+        for i, (im_target, label_target) in enumerate(target_train_dl):
+            im_target = im_target.to(output_device)
+            fc1_t = totalNet.feature_extractor.forward(im_target)
+            fc1_t, feature_target, fc2_t, predict_prob_target = totalNet.classifier.forward(fc1_t)
+            # print('=============', i, feature_target.detach().cpu().numpy().shape)
+            tgt_embedding.append(feature_target.detach().cpu().numpy())
+            tgt_member.append(label_target.detach().cpu().numpy())
+
+    src_member = np.concatenate(src_member, axis=0)
+    tgt_member = np.concatenate(tgt_member, axis=0)
+    embedding = np.concatenate([src_embedding, tgt_embedding], axis = 0)
+
+    max_k = 100
+    alpha = 1
+    embed_dims = ...
+
+    dpgmm = mixture.BayesianGaussianMixture(
+        n_components=args.max_k,
+        weight_concentration_prior=args.alpha / args.max_k,
+        weight_concentration_prior_type='dirichlet_process',
+        covariance_prior=args.embed_dims * np.identity(args.embed_dims),
+        covariance_type='full').fit(embedding)
+
+    preds = dpgmm.predict(embedding)
+
+    nmi = normalized_mutual_info_score(label, preds)
 
     for x in target_accumulator:
         globals()[x] = target_accumulator[x]
