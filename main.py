@@ -107,7 +107,7 @@ if args.test.test_only:
 
     max_k = 100
     alpha = 1
-    embed_dims = ...
+    embed_dims = len(embedding)
 
     dpgmm = mixture.BayesianGaussianMixture(
         n_components=args.max_k,
