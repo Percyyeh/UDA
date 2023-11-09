@@ -83,7 +83,6 @@ if args.test.test_only:
 
             feature = feature_extractor.forward(im)
             feature, __, before_softmax, predict_prob = classifier.forward(feature)
-            print(__)
             domain_prob = discriminator_separate.forward(__)
 
             target_share_weight = get_target_share_weight(domain_prob, before_softmax, domain_temperature=1.0,
