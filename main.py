@@ -108,7 +108,7 @@ if args.test.test_only:
         src_member = source_classes
         #src_member = np.concatenate(src_member, axis=0)
         tgt_member = np.concatenate(tgt_member, axis=0)
-        #src_embedding = 
+        src_embedding = __.detach().cpu().numpy()
         embedding = np.concatenate([src_embedding, tgt_embedding], axis = 0)
 
         max_k = 100
