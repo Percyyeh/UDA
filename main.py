@@ -104,25 +104,26 @@ if args.test.test_only:
             tgt_embedding.append(feature_target.detach().cpu().numpy())
             tgt_member.append(label_target.detach().cpu().numpy())
 
+        src_member = source_classes
         #src_member = np.concatenate(src_member, axis=0)
-        #tgt_member = np.concatenate(tgt_member, axis=0)
-        #embedding = np.concatenate([src_embedding, tgt_embedding], axis = 0)
+        tgt_member = np.concatenate(tgt_member, axis=0)
+        embedding = np.concatenate([src_embedding, tgt_embedding], axis = 0)
 
         max_k = 100
         alpha = 1
-        #embed_dims = len(embedding)
+        embed_dims = len(embedding)
 
-        #dpgmm = mixture.BayesianGaussianMixture(
-        #    n_components=args.max_k,
-        #    weight_concentration_prior=args.alpha / args.max_k,
-        #    weight_concentration_prior_type='dirichlet_process',
-        #    covariance_prior=args.embed_dims * np.identity(args.embed_dims),
-        #    covariance_type='full').fit(embedding)
+        dpgmm = mixture.BayesianGaussianMixture(
+            n_components=args.max_k,
+            weight_concentration_prior=args.alpha / args.max_k,
+            weight_concentration_prior_type='dirichlet_process',
+            covariance_prior=args.embed_dims * np.identity(args.embed_dims),
+            covariance_type='full').fit(embedding)
 
-        #preds = dpgmm.predict(embedding)
+        preds = dpgmm.predict(embedding)
 
-        #nmi = normalized_mutual_info_score(label_target, preds)
-        #print(nmi)
+        nmi = normalized_mutual_info_score(label_target, preds)
+        print(nmi)
 
     for x in target_accumulator:
         globals()[x] = target_accumulator[x]
@@ -133,7 +134,7 @@ if args.test.test_only:
     counters = [AccuracyCounter() for x in range(len(source_classes) + 1)]
 
     for (each_predict_prob, each_label, each_target_share_weight) in zip(predict_prob, label, target_share_weight):
-        print(each_label)
+        #print(source_classes)
         if each_label in source_classes:
             counters[each_label].Ntotal += 1.0
             each_pred_id = np.argmax(each_predict_prob)
