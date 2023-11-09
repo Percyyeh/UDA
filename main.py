@@ -83,6 +83,7 @@ if args.test.test_only:
 
             feature = feature_extractor.forward(im)
             feature, __, before_softmax, predict_prob = classifier.forward(feature)
+            print(__)
             domain_prob = discriminator_separate.forward(__)
 
             target_share_weight = get_target_share_weight(domain_prob, before_softmax, domain_temperature=1.0,
@@ -107,6 +108,7 @@ if args.test.test_only:
         src_member = source_classes
         #src_member = np.concatenate(src_member, axis=0)
         tgt_member = np.concatenate(tgt_member, axis=0)
+        #src_embedding = 
         embedding = np.concatenate([src_embedding, tgt_embedding], axis = 0)
 
         max_k = 100
